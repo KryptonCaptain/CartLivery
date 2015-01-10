@@ -11,6 +11,9 @@ import mods.cartlivery.common.CartLivery;
 import mods.cartlivery.common.utils.ColorUtils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 
 public class CartLiveryProvider implements IWailaEntityProvider {
 
@@ -54,6 +57,13 @@ public class CartLiveryProvider implements IWailaEntityProvider {
 
 	public List<String> getWailaTail(Entity entity, List<String> currenttip, IWailaEntityAccessor accessor, IWailaConfigHandler configHandler) {
 		return currenttip;
+	}
+
+	@Override
+	public NBTTagCompound getNBTData(EntityPlayerMP arg0, Entity arg1,
+			NBTTagCompound arg2, World arg3) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

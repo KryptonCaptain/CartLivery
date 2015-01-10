@@ -2,24 +2,33 @@ package mods.cartlivery.common.item;
 
 import java.util.List;
 
+import com.mojang.authlib.GameProfile;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mods.cartlivery.CommonProxy;
 import mods.cartlivery.client.LiveryTextureInfo;
 import mods.cartlivery.client.LiveryTextureRegistry;
 import mods.cartlivery.common.utils.ColorUtils;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.IIcon;
 
-public class ItemSticker extends Item {
+import org.lwjgl.opengl.GL11;
 
+public class ItemSticker extends ItemCartLivery {
+	
+    protected final IIcon[] itemIcons = new IIcon[3];
+	
 	public ItemSticker() {
-		setTextureName("paper");
-		setUnlocalizedName("cartlivery.sticker");
+		super();
+		setUnlocalizedName("sticker");
 		setMaxStackSize(4);
 		setHasSubtypes(true);
 	}
@@ -40,23 +49,62 @@ public class ItemSticker extends Item {
 		LiveryTextureInfo info = LiveryTextureRegistry.map.get(tag.getString("pattern"));
 		
 		if (info == null) {
-			list.add(I18n.format("cartlivery.unknown", tag.getString("pattern")));
+			list.add("Pattern: " + I18n.format("cartlivery.unknown", tag.getString("pattern")));
 		} else {
-			list.add(I18n.format("cartlivery." + tag.getString("pattern") + ".name"));
+			list.add("Pattern: " + I18n.format("cartlivery." + tag.getString("pattern") + ".name"));
 		}
-		list.add(ColorUtils.getColorName(tag.getInteger("patternColor")));
+		list.add("Primary Color: " + ColorUtils.getColorName(tag.getInteger("primaryColor")));
+		list.add("Secondary Color: " + ColorUtils.getColorName(tag.getInteger("secondaryColor")));
 	}
 
-	public static ItemStack create(String pattern, int color) {
+	public static ItemStack create(String pattern, int pcolor, int scolor) {
 		ItemStack result = new ItemStack(CommonProxy.itemSticker);
 		NBTTagCompound tag = new NBTTagCompound();
 		result.setTagCompound(tag);
 		tag.setString("pattern", pattern);
-		tag.setInteger("patternColor", color);
+		tag.setInteger("primaryColor", pcolor);
+		tag.setInteger("secondaryColor", scolor);
 		return result;
 	}
 	
 	public static ItemStack create(String pattern) {
-		return create(pattern, 15);
+		return create(pattern, 15, 15);
 	}
+	
+	@Override
+    public void registerIcons(IIconRegister iconRegister) {
+        itemIcons[0] = iconRegister.registerIcon("cartlivery:sticker_primary");
+        itemIcons[1] = iconRegister.registerIcon("cartlivery:sticker_secondary");
+        itemIcons[2] = iconRegister.registerIcon("cartlivery:sticker_blank");
+    }
+	
+	@Override
+    public boolean requiresMultipleRenderPasses() {
+        return true;
+    }
+
+    @Override
+    public int getRenderPasses(int metadata) {
+        return 3;
+    }
+
+    @Override
+    public int getColorFromItemStack(ItemStack stack, int pass) {
+        switch (pass) {
+            case 0:
+                return ColorUtils.getColor(stack.getTagCompound().getByte("primaryColor"));
+            case 1:
+            	return ColorUtils.getColor(stack.getTagCompound().getByte("secondaryColor"));
+            default:
+                return super.getColorFromItemStack(stack, pass);
+        }
+    }
+	
+	@Override
+    @SideOnly(Side.CLIENT)
+    public IIcon getIcon(ItemStack stack, int pass) {
+        if (pass >= itemIcons.length || itemIcons[pass] == null)
+            return itemIcons[2];
+        return itemIcons[pass];
+    }
 }

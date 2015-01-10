@@ -1,5 +1,5 @@
-item.cartlivery.cutter.name=Livery Cutting Tool
-item.cartlivery.sticker.name=Livery Sticker
+item.cartlivery:cutter.name=Livery Cutting Tool
+item.cartlivery:sticker.name=Livery Sticker
 cartlivery.builtin=Built-in: %s
 cartlivery.respack=Pack: %s
 

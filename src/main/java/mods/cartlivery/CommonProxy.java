@@ -23,6 +23,7 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.RecipeSorter.Category;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import com.google.common.collect.Sets;
 
@@ -52,8 +53,9 @@ public class CommonProxy {
 		GameRegistry.registerItem(itemSticker, "sticker");
 		
 		GameRegistry.addShapelessRecipe(new ItemStack(itemCutter), Items.shears, Items.paper);
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemCutter), "i i", "rir", "r r", 'i', "ingotIron", 'r', "dyeRed"));
 		GameRegistry.addRecipe(new LiveryStickerColoringRecipe());
-		RecipeSorter.register("cartlivery:coloring", LiveryStickerColoringRecipe.class, Category.SHAPELESS, "after:minecraft:shapeless");
+		RecipeSorter.register("cartlivery:coloring", LiveryStickerColoringRecipe.class, Category.SHAPED, "after:minecraft:shaped");
 		
 		FMLInterModComms.sendMessage(ModCartLivery.MOD_ID, "addClassExclusion", "mods.railcraft.common.carts.EntityLocomotive");
 		FMLInterModComms.sendMessage(ModCartLivery.MOD_ID, "addClassExclusion", "mods.railcraft.common.carts.EntityTunnelBore");
@@ -107,14 +109,16 @@ public class CommonProxy {
 			if (stack == null || !(stack.getItem() instanceof ItemSticker) || stack.getTagCompound() == null) return;
 			
 			String pattern = stack.getTagCompound().getString("pattern");
-			int patternColor = stack.getTagCompound().getInteger("patternColor");
+			int primaryColor = stack.getTagCompound().getInteger("primaryColor");
+			int secondaryColor = stack.getTagCompound().getInteger("secondaryColor");
 			if (pattern.isEmpty()) return;
 			
 			CartLivery livery = (CartLivery) event.target.getExtendedProperties(CartLivery.EXT_PROP_NAME);
 			if (!livery.pattern.isEmpty()) return;
 			
 			livery.pattern = pattern;
-			livery.patternColor = patternColor;
+			livery.baseColor = primaryColor;
+			livery.patternColor = secondaryColor;
 			
 			stack.stackSize--;
 			if (stack.stackSize == 0) event.entityPlayer.setCurrentItemOrArmor(0, null);
@@ -134,10 +138,10 @@ public class CommonProxy {
 			
 			CartLivery livery = (CartLivery) event.target.getExtendedProperties(CartLivery.EXT_PROP_NAME);
 			livery.pattern = "";
+			livery.baseColor = 7; //Return color to default
 			
 			CommonProxy.network.sendToAllAround(new LiveryUpdateMessage(event.target, livery), NetworkUtil.targetEntity(event.target));
 			event.setCanceled(true);
 		}
 	}
-	
 }

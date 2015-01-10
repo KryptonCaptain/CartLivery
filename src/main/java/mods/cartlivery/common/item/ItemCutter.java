@@ -5,13 +5,16 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
-public class ItemCutter extends Item {
+public class ItemCutter extends ItemCartLivery {
+	
+	public static ResourceLocation texture = new ResourceLocation("cartlivery", "textures/items/cutter.png");
 
 	public ItemCutter() {
-		setTextureName("shears");
-		setUnlocalizedName("cartlivery.cutter");
+		super();
+		setUnlocalizedName("cutter");
 		setMaxStackSize(1);
 		setMaxDamage(100);
 		setCreativeTab(CreativeTabs.tabTools);

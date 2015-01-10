@@ -1,5 +1,5 @@
-item.cartlivery.cutter.name=Livree-Schneidewerkzeug
-item.cartlivery.sticker.name=Livree-Sticker
+item.cartlivery:cutter.name=Livree-Schneidewerkzeug
+item.cartlivery:sticker.name=Livree-Sticker
 cartlivery.builtin=Eingebaut: %s
 cartlivery.respack=Paket: %s
 
