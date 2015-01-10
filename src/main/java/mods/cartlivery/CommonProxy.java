@@ -52,7 +52,6 @@ public class CommonProxy {
 		GameRegistry.registerItem(itemCutter, "cutter");
 		GameRegistry.registerItem(itemSticker, "sticker");
 		
-		GameRegistry.addShapelessRecipe(new ItemStack(itemCutter), Items.shears, Items.paper);
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemCutter), "i i", "rir", "r r", 'i', "ingotIron", 'r', "dyeRed"));
 		GameRegistry.addRecipe(new LiveryStickerColoringRecipe());
 		RecipeSorter.register("cartlivery:coloring", LiveryStickerColoringRecipe.class, Category.SHAPED, "after:minecraft:shaped");
