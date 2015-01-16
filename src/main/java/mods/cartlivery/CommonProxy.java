@@ -3,6 +3,8 @@ package mods.cartlivery;
 import java.util.Set;
 
 import mods.cartlivery.common.CartLivery;
+import mods.cartlivery.common.block.BlockAutoCutter;
+import mods.cartlivery.common.block.tileentity.TileEntityAutoCutter;
 import mods.cartlivery.common.item.ItemCutter;
 import mods.cartlivery.common.item.ItemSticker;
 import mods.cartlivery.common.item.LiveryStickerColoringRecipe;
@@ -14,9 +16,12 @@ import mods.cartlivery.common.network.LiveryUpdateHandler;
 import mods.cartlivery.common.network.LiveryUpdateMessage;
 import mods.cartlivery.common.utils.ColorUtils;
 import mods.cartlivery.common.utils.NetworkUtil;
+import net.minecraft.block.Block;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -41,6 +46,7 @@ public class CommonProxy {
 	
 	public static ItemSticker itemSticker = new ItemSticker();
 	public static ItemCutter itemCutter = new ItemCutter();
+	public static Block autoCutter = new BlockAutoCutter();
 
 	public void init() {
 		MinecraftForge.EVENT_BUS.register(this);
@@ -51,14 +57,18 @@ public class CommonProxy {
 		
 		GameRegistry.registerItem(itemCutter, "cutter");
 		GameRegistry.registerItem(itemSticker, "sticker");
+		GameRegistry.registerBlock(autoCutter, "autoCutter");
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemCutter), "i i", "rir", "r r", 'i', "ingotIron", 'r', "dyeRed"));
 		GameRegistry.addRecipe(new LiveryStickerColoringRecipe());
 		RecipeSorter.register("cartlivery:coloring", LiveryStickerColoringRecipe.class, Category.SHAPED, "after:minecraft:shaped");
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(autoCutter, 1), "iii", "ici", "iii", 'i', "ingotIron", 'c', itemCutter));
 		
 		FMLInterModComms.sendMessage(ModCartLivery.MOD_ID, "addClassExclusion", "mods.railcraft.common.carts.EntityLocomotive");
 		FMLInterModComms.sendMessage(ModCartLivery.MOD_ID, "addClassExclusion", "mods.railcraft.common.carts.EntityTunnelBore");
 		FMLInterModComms.sendMessage(ModCartLivery.MOD_ID, "addBuiltInLiveries", "stripe1,stripe2,arrowup,dblarrow,corners1,bottom,thissideup,love,db,railtech,fragile");
+		
+		registerTileEntities();
 	}
 	
 	@SubscribeEvent
@@ -142,5 +152,13 @@ public class CommonProxy {
 			CommonProxy.network.sendToAllAround(new LiveryUpdateMessage(event.target, livery), NetworkUtil.targetEntity(event.target));
 			event.setCanceled(true);
 		}
+	}
+	
+	public void registerTileEntities() {
+		registerTileEntity(TileEntityAutoCutter.class, "autoCutter");
+	}
+
+	private void registerTileEntity(Class<? extends TileEntity> cls, String baseName) {
+		GameRegistry.registerTileEntity(cls, "tile.autoCutter." + baseName);
 	}
 }

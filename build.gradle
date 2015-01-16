@@ -23,7 +23,7 @@ file "build.properties" withReader {
     ext.config = new ConfigSlurper().parse prop
 }
 
-version = "0.10.0"
+version = "0.10.2"
 group= "com.github.octarine-noise" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "CartLivery-1.7.10"
 

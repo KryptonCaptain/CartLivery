@@ -1,5 +1,6 @@
 item.cartlivery:cutter.name=Livery Cutting Tool
 item.cartlivery:sticker.name=Livery Sticker
+tile.cartlivery:autoCutter.name=Automatic Livery Cutting Tool
 cartlivery.builtin=Built-in: %s
 cartlivery.respack=Pack: %s
 

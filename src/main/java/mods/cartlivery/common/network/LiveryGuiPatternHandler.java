@@ -1,6 +1,7 @@
 package mods.cartlivery.common.network;
 
 import net.minecraft.inventory.Container;
+import mods.cartlivery.common.container.ContainerAutoCutter;
 import mods.cartlivery.common.container.ContainerCutter;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -14,7 +15,11 @@ public class LiveryGuiPatternHandler implements IMessageHandler<LiveryGuiPattern
 			ContainerCutter cutter = (ContainerCutter) container;
 			cutter.pattern = message.pattern;
 			cutter.onCraftMatrixChanged(cutter.inventoryInput);
-		}
+		}/*else if (container != null && container instanceof ContainerAutoCutter) {
+			ContainerAutoCutter cutter = (ContainerAutoCutter) container;
+			cutter.pattern = message.pattern;
+			cutter.onCraftMatrixChanged(cutter.inventoryInput);
+		}*/
 		return null;
 	}
 
