@@ -27,7 +27,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 
-@Mod(modid=ModCartLivery.MOD_ID, name=ModCartLivery.MOD_NAME, version=ModCartLivery.VERSION, useMetadata=true, dependencies="required-after:Forge@[10.13.2.1277,);after:Railcraft")
+@Mod(modid=ModCartLivery.MOD_ID, name=ModCartLivery.MOD_NAME, version=ModCartLivery.VERSION, useMetadata=true, dependencies="required-after:Forge@[10.13.2.1230,);after:Railcraft")
 public class ModCartLivery {
 
 	public static final String MOD_ID = "CartLivery";
