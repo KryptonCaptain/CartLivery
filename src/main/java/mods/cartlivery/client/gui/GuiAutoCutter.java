@@ -6,6 +6,7 @@ import mods.cartlivery.common.container.ContainerAutoCutter;
 import mods.cartlivery.common.container.ContainerCutter;
 import mods.cartlivery.common.network.LiveryGuiPatternMessage;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.ResourceLocation;
@@ -25,6 +26,14 @@ public class GuiAutoCutter extends GuiContainer {
 		//CommonProxy.network.sendToServer(new LiveryGuiPatternMessage(pattern));
 		this.tileAutoCutter = tileEntityAutoCutter;
     }
+    
+    @Override
+    protected void drawGuiContainerForegroundLayer(int p_146979_1_, int p_146979_2_)
+    {
+    	String s = this.tileAutoCutter.getInventoryName();
+        this.fontRendererObj.drawString(s, this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2, 6, 4210752);
+        this.fontRendererObj.drawString(I18n.format("container.inventory", new Object[0]), 8, this.ySize - 96 + 2, 4210752);
+    }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3){
@@ -35,7 +44,7 @@ public class GuiAutoCutter extends GuiContainer {
         if (this.tileAutoCutter.isCutting())
         {
             int i1 = this.tileAutoCutter.getCutProgressScaled(24);
-            this.drawTexturedModalRect(guiLeft + 76, guiTop + 14, 176, 0, i1 + 1, 16);
+            this.drawTexturedModalRect(guiLeft + 76, guiTop + 20, 176, 0, i1 + 1, 16);
         }
     }
 }

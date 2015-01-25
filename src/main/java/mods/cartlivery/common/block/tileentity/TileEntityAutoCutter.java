@@ -20,7 +20,7 @@ import net.minecraft.util.StatCollector;
 public class TileEntityAutoCutter extends TileEntity implements ISidedInventory {
 
 	private ItemStack[] inventory = new ItemStack[3];
-	private String name = "autoCutter";
+	private String name = "Livery Cutting Press";
 	
 	/** The number of ticks that the current sticker has been cutting for */
     public int cuttingTime;
@@ -134,10 +134,20 @@ public class TileEntityAutoCutter extends TileEntity implements ISidedInventory 
 							// we changed something, so we need to tell the chunk to save
 							markDirty();
 			            }
-					}/* else {
+					}
+					else
+					{
 						this.cuttingTime = 0;
-					}*/
+					}
 				}
+				else
+				{
+					this.cuttingTime = 0;
+				}
+			}
+			else
+			{
+				this.cuttingTime = 0;
 			}
 		}
 	}

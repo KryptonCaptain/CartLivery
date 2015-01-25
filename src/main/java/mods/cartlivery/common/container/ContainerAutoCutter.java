@@ -26,9 +26,9 @@ public class ContainerAutoCutter extends Container {
 		ContainerAutoCutter.player = player.player;
 		this.tileAutoCutter = tileEntityAutoCutter;
 
-		addSlot(tileEntityAutoCutter, 0, 52, 15);
+		addSlot(tileEntityAutoCutter, 0, 52, 21);
 		addSlot(tileEntityAutoCutter, 1, 80, 51);
-		addSlot(tileEntityAutoCutter, 2, 108, 15);
+		addSlot(tileEntityAutoCutter, 2, 108, 21);
 
 		bindPlayerInventory(player);
 	}
