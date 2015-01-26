@@ -15,6 +15,16 @@ cartlivery.love.name=Love
 cartlivery.db.name=Deutsche Bahn
 cartlivery.railtech.name=Rail-Tech
 cartlivery.fragile.name=Fragile
+cartlivery.electrical_hazard.name=Electrical Hazard
+cartlivery.fallout.name=Fallout
+cartlivery.radioactive.name=Radioactive
+cartlivery.railroad.name=Railroad
+cartlivery.warning.name=Warning Sign
+cartlivery.flammable.name=Flammable Materials
+cartlivery.biohazard.name=Biohazard
+cartlivery.diagonal.name=Diagonal Stripes
+cartlivery.thick_diagonal.name=Thick Diagonal Stripes
+cartlivery.mysterydump.name=MysteryDump
 
 color.0.name=Black
 color.1.name=Red

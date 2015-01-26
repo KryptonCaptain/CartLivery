@@ -2,6 +2,7 @@ package mods.cartlivery.client.model;
 
 import mods.cartlivery.client.LiveryTextureRegistry;
 import mods.cartlivery.common.CartLivery;
+import mods.cartlivery.common.utils.ColorUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelMinecart;
@@ -60,7 +61,13 @@ public class ModelCartLivery extends ModelBase {
 	}
 			
 	protected void setGLColor(int dyeColor) {
-		int color = (dyeColor < 0 || dyeColor > 15) ? 7 : dyeColor;
-		GL11.glColor4f(EntitySheep.fleeceColorTable[15 - color][0], EntitySheep.fleeceColorTable[15 - color][1], EntitySheep.fleeceColorTable[15 - color][2], 1.0f);
+		int c = ColorUtils.getColor(dyeColor);
+        float dim = 1.0F;
+        float c1 = (float) (c >> 16 & 255) / 255.0F;
+        float c2 = (float) (c >> 8 & 255) / 255.0F;
+        float c3 = (float) (c & 255) / 255.0F;
+        GL11.glColor4f(c1 * dim, c2 * dim, c3 * dim, 1);
+		/*int color = (dyeColor < 0 || dyeColor > 15) ? 7 : dyeColor;
+		GL11.glColor4f(EntitySheep.fleeceColorTable[15 - color][0], EntitySheep.fleeceColorTable[15 - color][1], EntitySheep.fleeceColorTable[15 - color][2], 1.0f);*/
 	}
 }

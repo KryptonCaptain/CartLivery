@@ -21,7 +21,7 @@ public class GuiCutter extends InventoryEffectRenderer {
 	ContainerCutter container;
 	
 	static int baseColor = 7;
-	static int patternColor = 7;
+	static int patternColor = 8;
 	String pattern = "";
 	
 	public GuiCutter(EntityPlayer player) {

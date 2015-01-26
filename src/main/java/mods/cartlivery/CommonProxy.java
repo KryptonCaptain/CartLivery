@@ -1,5 +1,6 @@
 package mods.cartlivery;
 
+import java.util.Random;
 import java.util.Set;
 
 import mods.cartlivery.common.CartLivery;
@@ -18,13 +19,20 @@ import mods.cartlivery.common.utils.ColorUtils;
 import mods.cartlivery.common.utils.NetworkUtil;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.item.ItemExpireEvent;
+import net.minecraftforge.event.entity.living.LivingDropsEvent;
+import net.minecraftforge.event.entity.minecart.MinecartEvent;
+import net.minecraftforge.event.entity.minecart.MinecartUpdateEvent;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.RecipeSorter.Category;
@@ -33,6 +41,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import com.google.common.collect.Sets;
 
 import cpw.mods.fml.common.event.FMLInterModComms;
+import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
@@ -66,7 +75,7 @@ public class CommonProxy {
 		
 		FMLInterModComms.sendMessage(ModCartLivery.MOD_ID, "addClassExclusion", "mods.railcraft.common.carts.EntityLocomotive");
 		FMLInterModComms.sendMessage(ModCartLivery.MOD_ID, "addClassExclusion", "mods.railcraft.common.carts.EntityTunnelBore");
-		FMLInterModComms.sendMessage(ModCartLivery.MOD_ID, "addBuiltInLiveries", "stripe1,stripe2,arrowup,dblarrow,corners1,bottom,thissideup,love,db,railtech,fragile");
+		FMLInterModComms.sendMessage(ModCartLivery.MOD_ID, "addBuiltInLiveries", "stripe1,stripe2,arrowup,dblarrow,corners1,bottom,thissideup,love,db,railtech,fragile,electrical_hazard,fallout,radioactive,railroad,warning,flammable,biohazard,thick_diagonal,diagonal,mysterydump");
 		
 		registerTileEntities();
 	}
@@ -146,11 +155,23 @@ public class CommonProxy {
 			if (stack == null || !(stack.getItem() instanceof ItemCutter)) return;
 			
 			CartLivery livery = (CartLivery) event.target.getExtendedProperties(CartLivery.EXT_PROP_NAME);
+			EntityItem ent = event.target.entityDropItem(ItemSticker.create(livery.pattern, livery.baseColor, livery.patternColor), 1.0F);
+			Random rand = new Random();
+			ent.motionY += rand.nextFloat() * 0.05F;
+            ent.motionX += (rand.nextFloat() - rand.nextFloat()) * 0.1F;
+            ent.motionZ += (rand.nextFloat() - rand.nextFloat()) * 0.1F;
 			livery.pattern = "";
 			livery.baseColor = 7; //Return color to default
 			
 			CommonProxy.network.sendToAllAround(new LiveryUpdateMessage(event.target, livery), NetworkUtil.targetEntity(event.target));
 			event.setCanceled(true);
+		}
+	}
+	
+	@SubscribeEvent
+	public void handleMinecartBreak(MinecartUpdateEvent event) {
+		if(event.minecart.getExtendedProperties(CartLivery.EXT_PROP_NAME) != null && event.minecart.getDamage()>0) {
+			System.out.println(event.minecart.getDamage());
 		}
 	}
 	
