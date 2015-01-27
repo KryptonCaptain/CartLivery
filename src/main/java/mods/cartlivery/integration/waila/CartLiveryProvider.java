@@ -2,6 +2,7 @@ package mods.cartlivery.integration.waila;
 
 import java.util.List;
 
+import cpw.mods.fml.common.Loader;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaEntityAccessor;
 import mcp.mobius.waila.api.IWailaEntityProvider;
@@ -9,6 +10,8 @@ import mods.cartlivery.client.LiveryTextureInfo;
 import mods.cartlivery.client.LiveryTextureRegistry;
 import mods.cartlivery.common.CartLivery;
 import mods.cartlivery.common.utils.ColorUtils;
+import mods.railcraft.client.emblems.Emblem;
+import mods.railcraft.client.emblems.EmblemToolsClient;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -36,9 +39,9 @@ public class CartLiveryProvider implements IWailaEntityProvider {
 						currenttip.add(String.format("\u00a7m%s", livery.pattern));
 					} else {
 						if (configHandler.getConfig("cartlivery.showResPack")) {
-							currenttip.add(String.format("%s (%s)", I18n.format("cartlivery." + livery.pattern + ".name"), info.packName));
+							currenttip.add("Pattern: "+String.format("%s (%s)", I18n.format("cartlivery." + livery.pattern + ".name"), info.packName));
 						} else {
-							currenttip.add(I18n.format("cartlivery." + livery.pattern + ".name"));
+							currenttip.add("Pattern: "+I18n.format("cartlivery." + livery.pattern + ".name"));
 						}
 					}
 				}
@@ -49,6 +52,15 @@ public class CartLiveryProvider implements IWailaEntityProvider {
 					currenttip.add(String.format("%s / %s", ColorUtils.getColorName(livery.baseColor), ColorUtils.getColorName(livery.patternColor)));
 				} else {
 					currenttip.add(ColorUtils.getColorName(livery.baseColor));
+				}
+			}
+			
+			if (Loader.isModLoaded("Railcraft") && configHandler.getConfig("cartlivery.showEmblem")) {
+				if (!livery.emblem.isEmpty()) {
+					Emblem emblem = EmblemToolsClient.packageManager.getEmblem(livery.emblem);
+					if (emblem != null){
+						currenttip.add("Emblem: "+emblem.displayName);
+					}
 				}
 			}
 		}

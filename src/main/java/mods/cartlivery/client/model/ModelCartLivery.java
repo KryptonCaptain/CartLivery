@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelMinecart;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.util.ResourceLocation;
@@ -19,6 +20,10 @@ public class ModelCartLivery extends ModelBase {
 	ModelRenderer liveryBox = new ModelRenderer(this, "livery");
 	
 	ResourceLocation baseTexture = new ResourceLocation("cartlivery:textures/entity/minecart_bleached.png");
+	protected float emblemSize = 0.2F;
+	protected float emblemOffsetX = 0F;
+	protected float emblemOffsetY = 0F;
+	protected float emblemOffsetZ = -0.51F;
 	
 	public ModelCartLivery() {
 		liveryBox = new ModelRenderer(this, "livery");
@@ -29,6 +34,14 @@ public class ModelCartLivery extends ModelBase {
 		liveryBox.addBox(-10.0f, -5.0f, -8.0f, 20, 10, 16);
 	}
 	
+	public void setEmblemPosition(float size, float offsetX, float offsetY, float offsetZ)
+	{
+	    this.emblemSize = size;
+	    this.emblemOffsetX = offsetX;
+	    this.emblemOffsetY = offsetY;
+	    this.emblemOffsetZ = offsetZ;
+	}
+	
 	@Override
 	public void render(Entity entity, float par2, float par3, float par4, float par5, float par6, float par7) {
 		if (entity.getExtendedProperties(CartLivery.EXT_PROP_NAME) == null) {
@@ -36,21 +49,21 @@ public class ModelCartLivery extends ModelBase {
 			baseModel.render(entity, par2, par3, par4, par5, par6, par7);
 		} else {
 			CartLivery livery = (CartLivery) entity.getExtendedProperties(CartLivery.EXT_PROP_NAME);
-			render(livery.baseColor, livery.patternColor, livery.pattern, par2, par3, par4, par5, par6, par7);
+			render(livery.baseColor, livery.patternColor, livery.pattern, livery.emblem, par2, par3, par4, par5, par6, par7);
 		}
 	}
 
-	public void render(int baseColor, int patternColor, String pattern, float par2, float par3, float par4, float par5, float par6, float par7) {
+	public void render(int baseColor, int patternColor, String pattern, String emblem, float par2, float par3, float par4, float par5, float par6, float par7) {
 		setGLColor(baseColor);
 		Minecraft.getMinecraft().renderEngine.bindTexture(baseTexture);
 		baseModel.render(null, par2, par3, par4, par5, par6, par7);
 
 		ResourceLocation liveryTexture = LiveryTextureRegistry.getTexture(pattern);
 		if (liveryTexture != null) {
+			GL11.glPushMatrix();
 			setGLColor(patternColor);
 			Minecraft.getMinecraft().renderEngine.bindTexture(liveryTexture);
 
-			GL11.glPushMatrix();
 			GL11.glScalef(1.01f, 1.01f, 1.01f);
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);

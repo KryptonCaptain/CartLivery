@@ -27,6 +27,7 @@ public class LiveryUpdateMessage implements IMessage {
 		livery.baseColor = buf.readByte();
 		livery.patternColor = buf.readByte();
 		livery.pattern = NetworkUtil.readString(buf);
+		livery.emblem = NetworkUtil.readString(buf);
 	}
 
 	public void toBytes(ByteBuf buf) {
@@ -35,6 +36,7 @@ public class LiveryUpdateMessage implements IMessage {
 		buf.writeByte(livery.baseColor);
 		buf.writeByte(livery.patternColor);
 		NetworkUtil.writeString(livery.pattern, buf);
+		NetworkUtil.writeString(livery.emblem, buf);
 	}
 
 }

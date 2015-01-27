@@ -21,6 +21,7 @@ public class LiveryUpdateHandler implements IMessageHandler<LiveryUpdateMessage,
 		livery.baseColor = message.livery.baseColor;
 		livery.patternColor = message.livery.patternColor;
 		livery.pattern = message.livery.pattern;
+		livery.emblem = message.livery.emblem;
 		return null;
 	}
 

@@ -5,6 +5,7 @@ import java.lang.reflect.Modifier;
 
 import mods.cartlivery.client.LiveryTextureRegistry;
 import mods.cartlivery.client.model.ModelCartLivery;
+import mods.cartlivery.client.model.RailcraftModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -66,7 +67,7 @@ public class ClientProxy extends CommonProxy {
 			modifiers.setAccessible(true);
 			
 			modifiers.set(defaultCore, defaultCore.getModifiers() & ~Modifier.FINAL);
-			defaultCore.set(null, new ModelCartLivery());
+			defaultCore.set(null, new RailcraftModel());
 			modifiers.set(defaultCore, defaultCore.getModifiers() | Modifier.FINAL);
 		} catch (Exception e) {
 			ModCartLivery.log.warn(I18n.format("message.cartlivery.overwriteModelRailcraftFail"));

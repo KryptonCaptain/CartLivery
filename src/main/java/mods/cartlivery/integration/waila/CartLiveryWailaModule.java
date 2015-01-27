@@ -11,6 +11,7 @@ public class CartLiveryWailaModule {
 		registrar.addConfig("CartLivery", "cartlivery.showPattern");
 		registrar.addConfig("CartLivery", "cartlivery.showResPack");
 		registrar.addConfig("CartLivery", "cartlivery.showColors");
+		registrar.addConfig("CartLivery", "cartlivery.showEmblem");
 	}
 	
 }

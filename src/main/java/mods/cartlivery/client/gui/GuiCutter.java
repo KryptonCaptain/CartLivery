@@ -81,7 +81,7 @@ public class GuiCutter extends InventoryEffectRenderer {
         GL11.glTranslatef(0.0F, 0.35f, 0.0F);
         GL11.glRotatef(yawRot, 0.0F, -1.0F, 0.0F);
         GL11.glRotatef(pitchRot, 1.0F, 0.0F, 0.0F);
-        cartModel.render(baseColor, patternColor, pattern, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0625f);
+        cartModel.render(baseColor, patternColor, pattern, null, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0625f);
         GL11.glPopMatrix();
 	}
 	

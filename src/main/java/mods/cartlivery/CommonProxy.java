@@ -40,6 +40,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import com.google.common.collect.Sets;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -155,6 +156,8 @@ public class CommonProxy {
 			if (stack == null || !(stack.getItem() instanceof ItemCutter)) return;
 			
 			CartLivery livery = (CartLivery) event.target.getExtendedProperties(CartLivery.EXT_PROP_NAME);
+			if(livery.pattern == null || livery.pattern.isEmpty() || livery.pattern.equals("cartlivery.unknown")) return;
+			
 			EntityItem ent = event.target.entityDropItem(ItemSticker.create(livery.pattern, livery.baseColor, livery.patternColor), 1.0F);
 			Random rand = new Random();
 			ent.motionY += rand.nextFloat() * 0.05F;

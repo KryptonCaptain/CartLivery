@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.mojang.authlib.GameProfile;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mods.cartlivery.CommonProxy;
@@ -69,6 +70,36 @@ public class ItemSticker extends ItemCartLivery {
 	
 	public static ItemStack create(String pattern) {
 		return create(pattern, 15, 15);
+	}
+	
+	public static void setPattern(ItemStack stack, String pattern){
+		NBTTagCompound tag = new NBTTagCompound();
+		stack.setTagCompound(tag);
+		tag.setString("pattern", pattern);
+	}
+	
+	public static void setPrimaryColor(ItemStack stack, int pcolor){
+		NBTTagCompound tag = new NBTTagCompound();
+		stack.setTagCompound(tag);
+		tag.setInteger("primaryColor", pcolor);
+	}
+	
+	public static void setSecondaryColor(ItemStack stack, int scolor){
+		NBTTagCompound tag = new NBTTagCompound();
+		stack.setTagCompound(tag);
+		tag.setInteger("secondaryColor", scolor);
+	}
+	
+	public static String getPattern(ItemStack stack){
+		return stack.getTagCompound().getString("pattern");
+	}
+	
+	public static int getPrimaryColor(ItemStack stack){
+		return stack.getTagCompound().getInteger("primaryColor");
+	}
+	
+	public static int getSecondaryColor(ItemStack stack){
+		return stack.getTagCompound().getInteger("secondaryColor");
 	}
 	
 	@Override
