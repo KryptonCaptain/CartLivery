@@ -18,10 +18,12 @@ import mods.cartlivery.common.network.LiveryUpdateMessage;
 import mods.cartlivery.common.utils.ColorUtils;
 import mods.cartlivery.common.utils.NetworkUtil;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.init.Items;
+import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
@@ -107,7 +109,12 @@ public class CommonProxy {
 			CartLivery livery = (CartLivery) event.target.getExtendedProperties(CartLivery.EXT_PROP_NAME);
 			int newColor = ColorUtils.getDyeColor(stack);	
 			
-			if (newColor != -1 && (!livery.pattern.isEmpty() || newColor != livery.baseColor)) {
+			if (newColor != -1 && newColor != livery.baseColor) {
+				if((livery.pattern == null || livery.pattern.isEmpty() || livery.pattern.equals("cartlivery.unknown")) && livery.baseColor != 7){
+					dropDye(event, livery);
+				}else if(!(livery.pattern == null || livery.pattern.isEmpty() || livery.pattern.equals("cartlivery.unknown"))){
+					dropSticker(event, livery);
+				}
 				livery.baseColor = newColor;
 				livery.pattern = "";
 				stack.stackSize--;
@@ -133,17 +140,22 @@ public class CommonProxy {
 			if (pattern.isEmpty()) return;
 			
 			CartLivery livery = (CartLivery) event.target.getExtendedProperties(CartLivery.EXT_PROP_NAME);
-			if (!livery.pattern.isEmpty()) return;
-			
-			livery.pattern = pattern;
-			livery.baseColor = primaryColor;
-			livery.patternColor = secondaryColor;
-			
-			stack.stackSize--;
-			if (stack.stackSize == 0) event.entityPlayer.setCurrentItemOrArmor(0, null);
-			
-			CommonProxy.network.sendToAllAround(new LiveryUpdateMessage(event.target, livery), NetworkUtil.targetEntity(event.target));
-			event.setCanceled(true);
+			if(!(livery.pattern==pattern && livery.baseColor==primaryColor && livery.patternColor==secondaryColor)){
+				if((livery.pattern == null || livery.pattern.isEmpty() || livery.pattern.equals("cartlivery.unknown")) && livery.baseColor != 7){
+					dropDye(event, livery);
+				}else if(!(livery.pattern == null || livery.pattern.isEmpty() || livery.pattern.equals("cartlivery.unknown"))){
+					dropSticker(event, livery);
+				}
+				livery.pattern = pattern;
+				livery.baseColor = primaryColor;
+				livery.patternColor = secondaryColor;
+				
+				stack.stackSize--;
+				if (stack.stackSize == 0) event.entityPlayer.setCurrentItemOrArmor(0, null);
+				
+				CommonProxy.network.sendToAllAround(new LiveryUpdateMessage(event.target, livery), NetworkUtil.targetEntity(event.target));
+				event.setCanceled(true);
+			}
 		}
 	}
 	
@@ -156,15 +168,11 @@ public class CommonProxy {
 			if (stack == null || !(stack.getItem() instanceof ItemCutter)) return;
 			
 			CartLivery livery = (CartLivery) event.target.getExtendedProperties(CartLivery.EXT_PROP_NAME);
-			if(livery.pattern == null || livery.pattern.isEmpty() || livery.pattern.equals("cartlivery.unknown")) return;
-			
-			EntityItem ent = event.target.entityDropItem(ItemSticker.create(livery.pattern, livery.baseColor, livery.patternColor), 1.0F);
-			Random rand = new Random();
-			ent.motionY += rand.nextFloat() * 0.05F;
-            ent.motionX += (rand.nextFloat() - rand.nextFloat()) * 0.1F;
-            ent.motionZ += (rand.nextFloat() - rand.nextFloat()) * 0.1F;
-			livery.pattern = "";
-			livery.baseColor = 7; //Return color to default
+			if((livery.pattern == null || livery.pattern.isEmpty() || livery.pattern.equals("cartlivery.unknown")) && livery.baseColor != 7){
+				dropDye(event, livery);
+			}else if(!(livery.pattern == null || livery.pattern.isEmpty() || livery.pattern.equals("cartlivery.unknown"))){
+				dropSticker(event, livery);
+			}
 			
 			CommonProxy.network.sendToAllAround(new LiveryUpdateMessage(event.target, livery), NetworkUtil.targetEntity(event.target));
 			event.setCanceled(true);
@@ -184,5 +192,25 @@ public class CommonProxy {
 
 	private void registerTileEntity(Class<? extends TileEntity> cls, String baseName) {
 		GameRegistry.registerTileEntity(cls, "tile.autoCutter." + baseName);
+	}
+	
+	public static void dropSticker(EntityInteractEvent event, CartLivery livery){
+		EntityItem ent = event.target.entityDropItem(ItemSticker.create(livery.pattern, livery.baseColor, livery.patternColor), 1.0F);
+		Random rand = new Random();
+		ent.motionY += rand.nextFloat() * 0.05F;
+        ent.motionX += (rand.nextFloat() - rand.nextFloat()) * 0.1F;
+        ent.motionZ += (rand.nextFloat() - rand.nextFloat()) * 0.1F;
+		livery.pattern = "";
+		livery.baseColor = 7; //Return color to default
+	}
+	
+	public static void dropDye(EntityInteractEvent event, CartLivery livery){
+		EntityItem ent = event.target.entityDropItem(new ItemStack(Items.dye, 1, livery.baseColor), 1.0F);
+		Random rand = new Random();
+		ent.motionY += rand.nextFloat() * 0.05F;
+        ent.motionX += (rand.nextFloat() - rand.nextFloat()) * 0.1F;
+        ent.motionZ += (rand.nextFloat() - rand.nextFloat()) * 0.1F;
+		livery.pattern = "";
+		livery.baseColor = 7; //Return color to default
 	}
 }

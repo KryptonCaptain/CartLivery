@@ -34,7 +34,7 @@ public class ModCartLivery {
 	public static final String MOD_ID = "CartLivery";
 	public static final String MOD_NAME = "Cart Livery";
 	public static final String CHANNEL_NAME = "cartLiv";
-	public static final String VERSION = "0.10.4";
+	public static final String VERSION = "0.10.5";
 	public static final String COMMON_PROXY_NAME = "mods.cartlivery.CommonProxy";
 	public static final String CLIENT_PROXY_NAME = "mods.cartlivery.ClientProxy";
 

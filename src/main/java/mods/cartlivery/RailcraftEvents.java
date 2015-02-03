@@ -117,15 +117,19 @@ public class RailcraftEvents extends CommonProxy{
 				if (emblem.isEmpty()) return;
 				
 				CartLivery livery = (CartLivery) event.target.getExtendedProperties(CartLivery.EXT_PROP_NAME);
-				if (!livery.emblem.isEmpty()) return;
-				
-				livery.emblem = emblem;
-				
-				stack.stackSize--;
-				if (stack.stackSize == 0) event.entityPlayer.setCurrentItemOrArmor(0, null);
-				
-				CommonProxy.network.sendToAllAround(new LiveryUpdateMessage(event.target, livery), NetworkUtil.targetEntity(event.target));
-				event.setCanceled(true);
+				if(Loader.isModLoaded("Railcraft") && livery.emblem != emblem){
+					if (Loader.isModLoaded("Railcraft") && (livery.emblem != null) && (!livery.emblem.isEmpty()) && (EmblemToolsClient.packageManager != null)){
+						dropEmblem(event, livery);
+					}
+					
+					livery.emblem = emblem;
+					
+					stack.stackSize--;
+					if (stack.stackSize == 0) event.entityPlayer.setCurrentItemOrArmor(0, null);
+					
+					CommonProxy.network.sendToAllAround(new LiveryUpdateMessage(event.target, livery), NetworkUtil.targetEntity(event.target));
+					event.setCanceled(true);
+				}
 			}
 		}
 	}
@@ -140,16 +144,19 @@ public class RailcraftEvents extends CommonProxy{
 			
 			CartLivery livery = (CartLivery) event.target.getExtendedProperties(CartLivery.EXT_PROP_NAME);
 			if (Loader.isModLoaded("Railcraft") && (livery.emblem != null) && (!livery.emblem.isEmpty()) && (EmblemToolsClient.packageManager != null)){
-				EntityItem ent = event.target.entityDropItem(ItemEmblem.getEmblem(livery.emblem), 1.0F);
-				Random rand = new Random();
-				ent.motionY += rand.nextFloat() * 0.05F;
-	            ent.motionX += (rand.nextFloat() - rand.nextFloat()) * 0.1F;
-	            ent.motionZ += (rand.nextFloat() - rand.nextFloat()) * 0.1F;
-				livery.emblem = "";
+				dropEmblem(event, livery);
 				
 				CommonProxy.network.sendToAllAround(new LiveryUpdateMessage(event.target, livery), NetworkUtil.targetEntity(event.target));
 				event.setCanceled(true);
 			}
 		}
+	}
+	public static void dropEmblem(EntityInteractEvent event, CartLivery livery){
+		EntityItem ent = event.target.entityDropItem(ItemEmblem.getEmblem(livery.emblem), 1.0F);
+		Random rand = new Random();
+		ent.motionY += rand.nextFloat() * 0.05F;
+        ent.motionX += (rand.nextFloat() - rand.nextFloat()) * 0.1F;
+        ent.motionZ += (rand.nextFloat() - rand.nextFloat()) * 0.1F;
+		livery.emblem = "";
 	}
 }
