@@ -78,7 +78,7 @@ public class CommonProxy {
 		
 		FMLInterModComms.sendMessage(ModCartLivery.MOD_ID, "addClassExclusion", "mods.railcraft.common.carts.EntityLocomotive");
 		FMLInterModComms.sendMessage(ModCartLivery.MOD_ID, "addClassExclusion", "mods.railcraft.common.carts.EntityTunnelBore");
-		FMLInterModComms.sendMessage(ModCartLivery.MOD_ID, "addBuiltInLiveries", "stripe1,stripe2,arrowup,dblarrow,corners1,bottom,thissideup,love,db,railtech,fragile,electrical_hazard,fallout,radioactive,railroad,warning,flammable,biohazard,thick_diagonal,diagonal,mysterydump");
+		FMLInterModComms.sendMessage(ModCartLivery.MOD_ID, "addBuiltInLiveries", "stripe1,stripe2,arrowup,dblarrow,corners1,bottom,thissideup,love,db,railtech,fragile,electrical_hazard,fallout,radioactive,railroad,warning,flammable,biohazard,thick_diagonal,diagonal");
 		
 		registerTileEntities();
 	}
@@ -170,19 +170,24 @@ public class CommonProxy {
 			CartLivery livery = (CartLivery) event.target.getExtendedProperties(CartLivery.EXT_PROP_NAME);
 			if((livery.pattern == null || livery.pattern.isEmpty() || livery.pattern.equals("cartlivery.unknown")) && livery.baseColor != 7){
 				dropDye(event, livery);
+				
+				ItemStack tool = event.entityPlayer.inventory.getStackInSlot(event.entityPlayer.inventory.currentItem);
+				tool.setItemDamage(tool.getItemDamage() + 1);
+				if (tool.getItemDamage() > tool.getMaxDamage()) {
+					event.entityPlayer.inventory.setInventorySlotContents(event.entityPlayer.inventory.currentItem, null);
+				}
 			}else if(!(livery.pattern == null || livery.pattern.isEmpty() || livery.pattern.equals("cartlivery.unknown"))){
 				dropSticker(event, livery);
+				
+				ItemStack tool = event.entityPlayer.inventory.getStackInSlot(event.entityPlayer.inventory.currentItem);
+				tool.setItemDamage(tool.getItemDamage() + 1);
+				if (tool.getItemDamage() > tool.getMaxDamage()) {
+					event.entityPlayer.inventory.setInventorySlotContents(event.entityPlayer.inventory.currentItem, null);
+				}
 			}
 			
 			CommonProxy.network.sendToAllAround(new LiveryUpdateMessage(event.target, livery), NetworkUtil.targetEntity(event.target));
 			event.setCanceled(true);
-		}
-	}
-	
-	@SubscribeEvent
-	public void handleMinecartBreak(MinecartUpdateEvent event) {
-		if(event.minecart.getExtendedProperties(CartLivery.EXT_PROP_NAME) != null && event.minecart.getDamage()>0) {
-			System.out.println(event.minecart.getDamage());
 		}
 	}
 	

@@ -2,7 +2,7 @@
 {
   "modid": "CartLivery",
   "name": "Cart Livery",
-  "version": "0.10.5",
+  "version": "0.10.6",
   "mcversion": "1.7.10",
   "description": "Paint minecarts and apply stickers to them!",
   "url": "https://github.com/octarine-noise/CartLivery",

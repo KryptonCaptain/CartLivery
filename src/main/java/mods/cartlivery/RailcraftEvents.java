@@ -146,6 +146,12 @@ public class RailcraftEvents extends CommonProxy{
 			if (Loader.isModLoaded("Railcraft") && (livery.emblem != null) && (!livery.emblem.isEmpty()) && (EmblemToolsClient.packageManager != null)){
 				dropEmblem(event, livery);
 				
+				ItemStack tool = event.entityPlayer.inventory.getStackInSlot(event.entityPlayer.inventory.currentItem);
+				tool.setItemDamage(tool.getItemDamage() + 1);
+				if (tool.getItemDamage() > tool.getMaxDamage()) {
+					event.entityPlayer.inventory.setInventorySlotContents(event.entityPlayer.inventory.currentItem, null);
+				}
+				
 				CommonProxy.network.sendToAllAround(new LiveryUpdateMessage(event.target, livery), NetworkUtil.targetEntity(event.target));
 				event.setCanceled(true);
 			}
