@@ -1,6 +1,7 @@
 package mods.cartlivery;
 
-
+import mods.cartlivery.RailcraftCommonProxy;
+import mods.cartlivery.RailcraftClientProxy;
 import mods.cartlivery.client.LiveryTextureRegistry;
 import mods.cartlivery.client.gui.GuiAutoCutter;
 import mods.cartlivery.common.block.BlockAutoCutter;
@@ -10,7 +11,9 @@ import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
 
 import org.apache.logging.log4j.Logger;
@@ -34,7 +37,7 @@ public class ModCartLivery {
 	public static final String MOD_ID = "CartLivery";
 	public static final String MOD_NAME = "Cart Livery";
 	public static final String CHANNEL_NAME = "cartLiv";
-	public static final String VERSION = "0.10.6";
+	public static final String VERSION = "0.10.7a";
 	public static final String COMMON_PROXY_NAME = "mods.cartlivery.CommonProxy";
 	public static final String CLIENT_PROXY_NAME = "mods.cartlivery.ClientProxy";
 
@@ -54,7 +57,11 @@ public class ModCartLivery {
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent event) {
 		if(Loader.isModLoaded("Railcraft")){
-			proxy = new RailcraftEvents();
+			if(FMLCommonHandler.instance().getEffectiveSide()==Side.SERVER){
+				proxy = new mods.cartlivery.RailcraftCommonProxy();
+			}else if(FMLCommonHandler.instance().getEffectiveSide()==Side.CLIENT){
+				proxy = new mods.cartlivery.RailcraftClientProxy();
+			}
 		}
 		proxy.init();
 	}

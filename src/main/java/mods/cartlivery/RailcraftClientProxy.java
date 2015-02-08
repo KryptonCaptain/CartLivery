@@ -47,8 +47,8 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class RailcraftEvents extends CommonProxy{
-	public RailcraftEvents() {
+public class RailcraftClientProxy extends RailcraftCommonProxy{
+	public RailcraftClientProxy() {
 		//this.init();
 	}
 	
@@ -68,7 +68,6 @@ public class RailcraftEvents extends CommonProxy{
 		FMLInterModComms.sendMessage("Waila", "register", "mods.cartlivery.integration.waila.CartLiveryWailaModule.register");
 	}
 	
-	@SideOnly(Side.CLIENT)
 	private void replaceMinecraftCartModel() {
 		try {
 			Field modelMinecart = null;
@@ -88,7 +87,6 @@ public class RailcraftEvents extends CommonProxy{
 		}
 	}
 	
-	@SideOnly(Side.CLIENT)
 	private void replaceRailcraftCartModel() {
 		try {
 			Class<?> modelManagerClass = Class.forName("mods.railcraft.client.render.carts.CartModelManager");
@@ -103,66 +101,5 @@ public class RailcraftEvents extends CommonProxy{
 		} catch (Exception e) {
 			ModCartLivery.log.warn(I18n.format("message.cartlivery.overwriteModelRailcraftFail"));
 		}
-	}
-	
-	@SubscribeEvent
-	public void handleMinecartEmblemApply(EntityInteractEvent event) {
-		if (event.entityPlayer.worldObj.isRemote) return;
-		
-		if (event.entityPlayer.isSneaking() && event.target.getExtendedProperties(CartLivery.EXT_PROP_NAME) != null) {
-			ItemStack stack = event.entityPlayer.getCurrentEquippedItem();
-			if (stack == null || !Loader.isModLoaded("Railcraft") || !(stack.getItem() instanceof ItemEmblem) || stack.getTagCompound() == null) return;
-			if (Loader.isModLoaded("Railcraft") && stack.getItem() instanceof ItemEmblem){
-				String emblem = EmblemToolsServer.getEmblemIdentifier(stack);
-				if (emblem.isEmpty()) return;
-				
-				CartLivery livery = (CartLivery) event.target.getExtendedProperties(CartLivery.EXT_PROP_NAME);
-				if(Loader.isModLoaded("Railcraft") && livery.emblem != emblem){
-					if (Loader.isModLoaded("Railcraft") && (livery.emblem != null) && (!livery.emblem.isEmpty()) && (EmblemToolsClient.packageManager != null)){
-						dropEmblem(event, livery);
-					}
-					
-					livery.emblem = emblem;
-					
-					stack.stackSize--;
-					if (stack.stackSize == 0) event.entityPlayer.setCurrentItemOrArmor(0, null);
-					
-					CommonProxy.network.sendToAllAround(new LiveryUpdateMessage(event.target, livery), NetworkUtil.targetEntity(event.target));
-					event.setCanceled(true);
-				}
-			}
-		}
-	}
-	
-	@SubscribeEvent
-	public void handleMinecartEmblemRemove(EntityInteractEvent event) {
-		if (event.entityPlayer.worldObj.isRemote) return;
-
-		if (event.entityPlayer.isSneaking() && event.target.getExtendedProperties(CartLivery.EXT_PROP_NAME) != null) {
-			ItemStack stack = event.entityPlayer.getCurrentEquippedItem();
-			if (stack == null || !(stack.getItem() instanceof ItemCutter)) return;
-			
-			CartLivery livery = (CartLivery) event.target.getExtendedProperties(CartLivery.EXT_PROP_NAME);
-			if (Loader.isModLoaded("Railcraft") && (livery.emblem != null) && (!livery.emblem.isEmpty()) && (EmblemToolsClient.packageManager != null)){
-				dropEmblem(event, livery);
-				
-				ItemStack tool = event.entityPlayer.inventory.getStackInSlot(event.entityPlayer.inventory.currentItem);
-				tool.setItemDamage(tool.getItemDamage() + 1);
-				if (tool.getItemDamage() > tool.getMaxDamage()) {
-					event.entityPlayer.inventory.setInventorySlotContents(event.entityPlayer.inventory.currentItem, null);
-				}
-				
-				CommonProxy.network.sendToAllAround(new LiveryUpdateMessage(event.target, livery), NetworkUtil.targetEntity(event.target));
-				event.setCanceled(true);
-			}
-		}
-	}
-	public static void dropEmblem(EntityInteractEvent event, CartLivery livery){
-		EntityItem ent = event.target.entityDropItem(ItemEmblem.getEmblem(livery.emblem), 1.0F);
-		Random rand = new Random();
-		ent.motionY += rand.nextFloat() * 0.05F;
-        ent.motionX += (rand.nextFloat() - rand.nextFloat()) * 0.1F;
-        ent.motionZ += (rand.nextFloat() - rand.nextFloat()) * 0.1F;
-		livery.emblem = "";
 	}
 }

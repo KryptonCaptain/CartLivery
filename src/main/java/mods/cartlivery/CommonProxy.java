@@ -140,7 +140,7 @@ public class CommonProxy {
 			if (pattern.isEmpty()) return;
 			
 			CartLivery livery = (CartLivery) event.target.getExtendedProperties(CartLivery.EXT_PROP_NAME);
-			if(!(livery.pattern==pattern && livery.baseColor==primaryColor && livery.patternColor==secondaryColor)){
+			if(!(livery.pattern.equals(pattern) && livery.baseColor==primaryColor && livery.patternColor==secondaryColor)){
 				if((livery.pattern == null || livery.pattern.isEmpty() || livery.pattern.equals("cartlivery.unknown")) && livery.baseColor != 7){
 					dropDye(event, livery);
 				}else if(!(livery.pattern == null || livery.pattern.isEmpty() || livery.pattern.equals("cartlivery.unknown"))){

@@ -23,11 +23,9 @@ file "build.properties" withReader {
     ext.config = new ConfigSlurper().parse prop
 }
 
-version = "0.10.6"
+version = "0.10.7a"
 group= "com.github.octarine-noise" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "CartLivery-1.7.10"
-
-ext.apiRailcraft = "./api/railcraft"
 
 minecraft {
     version = "1.7.10-10.13.2.1230"
