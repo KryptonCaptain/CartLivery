@@ -18,6 +18,7 @@ import mods.cartlivery.common.network.LiveryUpdateMessage;
 import mods.cartlivery.common.utils.ColorUtils;
 import mods.cartlivery.common.utils.NetworkUtil;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockFurnace;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.item.EntityItem;
@@ -58,7 +59,8 @@ public class CommonProxy {
 	
 	public static ItemSticker itemSticker = new ItemSticker();
 	public static ItemCutter itemCutter = new ItemCutter();
-	public static Block autoCutter = new BlockAutoCutter();
+	public static Block autoCutter = new BlockAutoCutter(false).setStepSound(Block.soundTypeMetal).setCreativeTab(CreativeTabs.tabDecorations);
+	public static Block autoCutterLive = new BlockAutoCutter(true).setStepSound(Block.soundTypeMetal);
 
 	public void init() {
 		MinecraftForge.EVENT_BUS.register(this);
@@ -70,7 +72,8 @@ public class CommonProxy {
 		GameRegistry.registerItem(itemCutter, "cutter");
 		GameRegistry.registerItem(itemSticker, "sticker");
 		GameRegistry.registerBlock(autoCutter, "autoCutter");
-		
+		GameRegistry.registerBlock(autoCutterLive, "autoCutterLive");
+			
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemCutter), "i i", "rir", "r r", 'i', "ingotIron", 'r', "dyeRed"));
 		GameRegistry.addRecipe(new LiveryStickerColoringRecipe());
 		RecipeSorter.register("cartlivery:coloring", LiveryStickerColoringRecipe.class, Category.SHAPED, "after:minecraft:shaped");
@@ -120,6 +123,7 @@ public class CommonProxy {
 				stack.stackSize--;
 				if (stack.stackSize == 0) event.entityPlayer.setCurrentItemOrArmor(0, null);
 				
+				event.target.playSound("mob.chicken.plop", 1.0F, 1.0F);
 				CommonProxy.network.sendToAllAround(new LiveryUpdateMessage(event.target, livery), NetworkUtil.targetEntity(event.target));
 				event.setCanceled(true);
 			}
@@ -153,6 +157,7 @@ public class CommonProxy {
 				stack.stackSize--;
 				if (stack.stackSize == 0) event.entityPlayer.setCurrentItemOrArmor(0, null);
 				
+				event.target.playSound("mob.chicken.plop", 1.0F, 1.0F);
 				CommonProxy.network.sendToAllAround(new LiveryUpdateMessage(event.target, livery), NetworkUtil.targetEntity(event.target));
 				event.setCanceled(true);
 			}
@@ -186,6 +191,7 @@ public class CommonProxy {
 				}
 			}
 			
+			event.target.playSound("mob.sheep.shear", 1.0F, 1.0F);
 			CommonProxy.network.sendToAllAround(new LiveryUpdateMessage(event.target, livery), NetworkUtil.targetEntity(event.target));
 			event.setCanceled(true);
 		}

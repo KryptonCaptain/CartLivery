@@ -70,6 +70,7 @@ public class RailcraftCommonProxy extends CommonProxy{
 					event.entityPlayer.inventory.setInventorySlotContents(event.entityPlayer.inventory.currentItem, null);
 				}
 				
+				event.target.playSound("random.break", 1.0F, 1.0F);
 				CommonProxy.network.sendToAllAround(new LiveryUpdateMessage(event.target, livery), NetworkUtil.targetEntity(event.target));
 				event.setCanceled(true);
 			}
@@ -98,6 +99,7 @@ public class RailcraftCommonProxy extends CommonProxy{
 					stack.stackSize--;
 					if (stack.stackSize == 0) event.entityPlayer.setCurrentItemOrArmor(0, null);
 					
+					event.target.playSound("random.anvil_land", 1.0F, 1.0F);
 					CommonProxy.network.sendToAllAround(new LiveryUpdateMessage(event.target, livery), NetworkUtil.targetEntity(event.target));
 					event.setCanceled(true);
 				}

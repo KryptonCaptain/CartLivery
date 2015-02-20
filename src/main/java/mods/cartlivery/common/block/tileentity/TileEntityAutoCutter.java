@@ -2,8 +2,10 @@ package mods.cartlivery.common.block.tileentity;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import mods.cartlivery.common.block.BlockAutoCutter;
 import mods.cartlivery.common.item.ItemSticker;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockFurnace;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -115,8 +117,15 @@ public class TileEntityAutoCutter extends TileEntity implements ISidedInventory 
 					// if we can place the result in the output
 					if (canMerge(Cut)/* && this.isCutting()*/) {
 						this.cuttingTime++;
+			            if (this.cuttingTime == 196)
+			            {
+			            	BlockAutoCutter.updateBlockState(true, this.worldObj, this.xCoord, this.yCoord, this.zCoord);
+			            	this.worldObj.playSoundEffect((double)this.xCoord + 0.5D, (double)this.yCoord + 0.5D, (double)this.zCoord + 0.5D, "mob.sheep.shear", 1.0F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F);
+			            }
 			            if (this.cuttingTime == 200)
 			            {
+			            	BlockAutoCutter.updateBlockState(false, this.worldObj, this.xCoord, this.yCoord, this.zCoord);
+			            	//this.worldObj.playSoundEffect((double)this.xCoord + 0.5D, (double)this.yCoord + 0.5D, (double)this.zCoord + 0.5D, "mob.sheep.shear", 1.0F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F);
 			                this.cuttingTime = 0;
 			                
 			                // if our output is empty, just use the current result
