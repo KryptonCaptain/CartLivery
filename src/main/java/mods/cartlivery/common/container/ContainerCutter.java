@@ -1,5 +1,6 @@
 package mods.cartlivery.common.container;
 
+import mods.cartlivery.CartConfig;
 import mods.cartlivery.common.item.ItemSticker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -52,7 +53,8 @@ public class ContainerCutter extends Container {
 			public void onPickupFromSlot(EntityPlayer player, ItemStack stack) {
 				super.onPickupFromSlot(player, stack);
 				damageTool();
-				player.playSound("mob.sheep.shear", 1.0F, 1.0F);
+				if(CartConfig.PLAY_SOUNDS)
+					player.playSound("CartLivery:sticker_cut", 1.0F, 1.0F);
 			}
         });
 	}

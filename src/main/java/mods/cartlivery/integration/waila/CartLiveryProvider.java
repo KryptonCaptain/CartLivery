@@ -6,6 +6,7 @@ import cpw.mods.fml.common.Loader;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaEntityAccessor;
 import mcp.mobius.waila.api.IWailaEntityProvider;
+import mods.cartlivery.CartConfig;
 import mods.cartlivery.client.LiveryTextureInfo;
 import mods.cartlivery.client.LiveryTextureRegistry;
 import mods.cartlivery.common.CartLivery;
@@ -55,7 +56,7 @@ public class CartLiveryProvider implements IWailaEntityProvider {
 				}
 			}
 			
-			if (Loader.isModLoaded("Railcraft") && configHandler.getConfig("cartlivery.showEmblem")) {
+			if (CartConfig.ENABLE_EMBLEMS && Loader.isModLoaded("Railcraft") && configHandler.getConfig("cartlivery.showEmblem")) {
 				if (!livery.emblem.isEmpty()) {
 					Emblem emblem = EmblemToolsClient.packageManager.getEmblem(livery.emblem);
 					if (emblem != null){

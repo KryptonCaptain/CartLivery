@@ -1,5 +1,6 @@
 package mods.cartlivery.common.container;
 
+import cofh.api.energy.EnergyStorage;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mods.cartlivery.common.block.tileentity.TileEntityAutoCutter;
@@ -20,6 +21,7 @@ public class ContainerAutoCutter extends Container {
 	public TileEntityAutoCutter tileAutoCutter;
 	public static EntityPlayer player;
 	private int lastCuttingTime;
+	private int lastEnergyStorage;
 
 	public ContainerAutoCutter(InventoryPlayer player, TileEntityAutoCutter tileEntityAutoCutter) {
 
@@ -34,10 +36,14 @@ public class ContainerAutoCutter extends Container {
 	}
 	
 	@Override
-	public void addCraftingToCrafters(ICrafting p_75132_1_)
+	public void addCraftingToCrafters(ICrafting icrafting)
     {
-        super.addCraftingToCrafters(p_75132_1_);
-        p_75132_1_.sendProgressBarUpdate(this, 0, this.tileAutoCutter.cuttingTime);
+        super.addCraftingToCrafters(icrafting);
+        icrafting.sendProgressBarUpdate(this, 0, this.tileAutoCutter.cuttingTime);
+        
+        EnergyStorage storage = this.tileAutoCutter.getEnergyStorage();
+        if (storage != null)
+            icrafting.sendProgressBarUpdate(this, 1, storage.getEnergyStored());
     }
 	
 	/**
@@ -47,7 +53,8 @@ public class ContainerAutoCutter extends Container {
     public void detectAndSendChanges()
     {
         super.detectAndSendChanges();
-
+        
+        EnergyStorage storage = this.tileAutoCutter.getEnergyStorage();
         for (int i = 0; i < this.crafters.size(); ++i)
         {
             ICrafting icrafting = (ICrafting)this.crafters.get(i);
@@ -56,18 +63,27 @@ public class ContainerAutoCutter extends Container {
             {
                 icrafting.sendProgressBarUpdate(this, 0, this.tileAutoCutter.cuttingTime);
             }
+            if (storage != null)
+            {
+            	icrafting.sendProgressBarUpdate(this, 1, storage.getEnergyStored());
+            }
         }
 
         this.lastCuttingTime = this.tileAutoCutter.cuttingTime;
+        //this.lastEnergyStorage = this.tileAutoCutter.getEnergyStorage().getEnergyStored();
     }
 
     @SideOnly(Side.CLIENT)
     public void updateProgressBar(int p_75137_1_, int p_75137_2_)
     {
-        if (p_75137_1_ == 0)
-        {
-            this.tileAutoCutter.cuttingTime = p_75137_2_;
-        }
+    	switch(p_75137_1_){
+	    	case 0:
+	    		this.tileAutoCutter.cuttingTime = p_75137_2_;
+	    		break;
+	    	case 1:
+	    		this.tileAutoCutter.getEnergyStorage().setEnergyStored(p_75137_2_);
+	    		break;
+    	}
     }
 
 	private void addSlot(IInventory inv, final int id, int x, int y) {

@@ -1,5 +1,6 @@
 item.cartlivery:cutter.name=Livree-Schneidewerkzeug
 item.cartlivery:sticker.name=Livree-Sticker
+tile.cartlivery:autoCutter.name=Liveree Schneiden Presse
 cartlivery.builtin=Eingebaut: %s
 cartlivery.respack=Paket: %s
 
@@ -8,10 +9,21 @@ cartlivery.stripe2.name=Doppelstreifen
 cartlivery.arrowup.name=Pfeil Oben
 cartlivery.dblarrow.name=Doppelpfeile
 cartlivery.corners1.name=Kanten
+cartlivery.bottom.name=Zwei-Farben-Bottom
+cartlivery.thissideup.name=Diese Seite Nach Oben
 cartlivery.love.name=Liebe
 cartlivery.db.name=Deutsche Bahn
 cartlivery.railtech.name=Rail-Tech
 cartlivery.fragile.name=Zerbrechlich
+cartlivery.electrical_hazard.name=Elektrische Gefahr
+cartlivery.fallout.name=Radioaktiver Niederschlag
+cartlivery.radioactive.name=Radioaktiv
+cartlivery.railroad.name=Eisenbahn
+cartlivery.warning.name=Menetekel
+cartlivery.flammable.name=Brennbare Materialien
+cartlivery.biohazard.name=Biohazard
+cartlivery.diagonal.name=Diagonalstreifen
+cartlivery.thick_diagonal.name=Thick-Diagonalstreifen
 
 color.0.name=Schwarz
 color.1.name=Rot
@@ -33,7 +45,12 @@ color.15.name=Weiß
 option.cartlivery.showPattern=Schablonenname
 option.cartlivery.showResPack=Ressourcenpaket
 option.cartlivery.showColors=Farben
+option.cartlivery.showEmblem=Emblem
 
+message.cartlivery.overwriteModel=Overwriting default cart model
+message.cartlivery.overwriteModelMinecraftFail=Unable to overwrite Minecraft cart model, minecarts will render normally
+message.cartlivery.overwriteModelRailcraftFail=Unable to overwrite Railcraft cart model, minecarts will render normally
+message.cartlivery.registerBuiltIn=Registering %d built-in liveries from mod %s
 message.cartlivery.invalidExclusion=Mod %s versuchte, eine Klassesausnahme für nicht-existente Klasse zu registrieren: %s
 message.cartlivery.invalidLiveryRequest=Ungültige Livery-Anfrage von Spieler %s erhalten
 message.cartlivery.invalidLiveryUpdate=Ungültiges Livery-Update-Paket erhalten

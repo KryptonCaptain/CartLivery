@@ -30,6 +30,7 @@ import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @Mod(modid=ModCartLivery.MOD_ID, name=ModCartLivery.MOD_NAME, version=ModCartLivery.VERSION, useMetadata=true, dependencies="required-after:Forge@[10.13.2.1230,);after:Railcraft")
 public class ModCartLivery {
@@ -37,7 +38,7 @@ public class ModCartLivery {
 	public static final String MOD_ID = "CartLivery";
 	public static final String MOD_NAME = "Cart Livery";
 	public static final String CHANNEL_NAME = "cartLiv";
-	public static final String VERSION = "0.10.8";
+	public static final String VERSION = "0.11.1";
 	public static final String COMMON_PROXY_NAME = "mods.cartlivery.CommonProxy";
 	public static final String CLIENT_PROXY_NAME = "mods.cartlivery.ClientProxy";
 
@@ -49,9 +50,14 @@ public class ModCartLivery {
 	
 	public static Logger log;
 	
+	public CartConfig config;
+	
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		log = event.getModLog();
+		config = new CartConfig(event);
+
+		config.preInit();
 	}
 	
 	@Mod.EventHandler
@@ -63,9 +69,11 @@ public class ModCartLivery {
 				proxy = new mods.cartlivery.RailcraftClientProxy();
 			}
 		}
+		config.save();
 		proxy.init();
 	}
 	
+	@SideOnly(Side.CLIENT)
 	@Mod.EventHandler
 	public void handleIMCMessage(FMLInterModComms.IMCEvent event) {
 		for (IMCMessage message : event.getMessages()) {

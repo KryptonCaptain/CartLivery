@@ -59,7 +59,7 @@ public class CommonProxy {
 	
 	public static ItemSticker itemSticker = new ItemSticker();
 	public static ItemCutter itemCutter = new ItemCutter();
-	public static Block autoCutter = new BlockAutoCutter(false).setStepSound(Block.soundTypeMetal).setCreativeTab(CreativeTabs.tabDecorations);
+	public static Block autoCutter = new BlockAutoCutter(false).setStepSound(Block.soundTypeMetal).setCreativeTab(CreativeTabs.tabTransport);
 	public static Block autoCutterLive = new BlockAutoCutter(true).setStepSound(Block.soundTypeMetal);
 
 	public void init() {
@@ -71,13 +71,17 @@ public class CommonProxy {
 		
 		GameRegistry.registerItem(itemCutter, "cutter");
 		GameRegistry.registerItem(itemSticker, "sticker");
-		GameRegistry.registerBlock(autoCutter, "autoCutter");
-		GameRegistry.registerBlock(autoCutterLive, "autoCutterLive");
+		if(CartConfig.ENABLE_AUTOCUTTER){
+			GameRegistry.registerBlock(autoCutter, "autoCutter");
+			GameRegistry.registerBlock(autoCutterLive, "autoCutterLive");
+		}
 			
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemCutter), "i i", "rir", "r r", 'i', "ingotIron", 'r', "dyeRed"));
 		GameRegistry.addRecipe(new LiveryStickerColoringRecipe());
 		RecipeSorter.register("cartlivery:coloring", LiveryStickerColoringRecipe.class, Category.SHAPED, "after:minecraft:shaped");
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(autoCutter, 1), "iii", "ici", "iii", 'i', "ingotIron", 'c', itemCutter));
+		if(CartConfig.ENABLE_AUTOCUTTER){
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(autoCutter, 1), "iii", "ici", "iii", 'i', "ingotIron", 'c', itemCutter));
+		}
 		
 		FMLInterModComms.sendMessage(ModCartLivery.MOD_ID, "addClassExclusion", "mods.railcraft.common.carts.EntityLocomotive");
 		FMLInterModComms.sendMessage(ModCartLivery.MOD_ID, "addClassExclusion", "mods.railcraft.common.carts.EntityTunnelBore");
@@ -123,7 +127,8 @@ public class CommonProxy {
 				stack.stackSize--;
 				if (stack.stackSize == 0) event.entityPlayer.setCurrentItemOrArmor(0, null);
 				
-				event.target.playSound("mob.chicken.plop", 1.0F, 1.0F);
+				if(CartConfig.PLAY_SOUNDS)
+					event.target.playSound("CartLivery:sticker_apply", 1.0F, 1.0F);
 				CommonProxy.network.sendToAllAround(new LiveryUpdateMessage(event.target, livery), NetworkUtil.targetEntity(event.target));
 				event.setCanceled(true);
 			}
@@ -157,7 +162,8 @@ public class CommonProxy {
 				stack.stackSize--;
 				if (stack.stackSize == 0) event.entityPlayer.setCurrentItemOrArmor(0, null);
 				
-				event.target.playSound("mob.chicken.plop", 1.0F, 1.0F);
+				if(CartConfig.PLAY_SOUNDS)
+					event.target.playSound("CartLivery:sticker_apply", 1.0F, 1.0F);
 				CommonProxy.network.sendToAllAround(new LiveryUpdateMessage(event.target, livery), NetworkUtil.targetEntity(event.target));
 				event.setCanceled(true);
 			}
@@ -191,14 +197,16 @@ public class CommonProxy {
 				}
 			}
 			
-			event.target.playSound("mob.sheep.shear", 1.0F, 1.0F);
+			if(CartConfig.PLAY_SOUNDS)
+				event.target.playSound("CartLivery:sticker_cut", 1.0F, 1.0F);
 			CommonProxy.network.sendToAllAround(new LiveryUpdateMessage(event.target, livery), NetworkUtil.targetEntity(event.target));
 			event.setCanceled(true);
 		}
 	}
 	
 	public void registerTileEntities() {
-		registerTileEntity(TileEntityAutoCutter.class, "autoCutter");
+		if(CartConfig.ENABLE_AUTOCUTTER)
+			registerTileEntity(TileEntityAutoCutter.class, "autoCutter");
 	}
 
 	private void registerTileEntity(Class<? extends TileEntity> cls, String baseName) {

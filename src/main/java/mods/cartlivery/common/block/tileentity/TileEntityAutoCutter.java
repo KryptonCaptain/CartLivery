@@ -2,10 +2,12 @@ package mods.cartlivery.common.block.tileentity;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import mods.cartlivery.CartConfig;
 import mods.cartlivery.common.block.BlockAutoCutter;
 import mods.cartlivery.common.item.ItemSticker;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFurnace;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -18,15 +20,27 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.StatCollector;
+import net.minecraftforge.common.util.ForgeDirection;
+import cofh.api.energy.EnergyStorage;
+import cofh.api.energy.IEnergyHandler;
 
-public class TileEntityAutoCutter extends TileEntity implements ISidedInventory {
+public class TileEntityAutoCutter extends TileEntity implements IEnergyHandler, ISidedInventory {
 
 	private ItemStack[] inventory = new ItemStack[3];
-	private String name = "Livery Cutting Press";
+	private EnergyStorage energyStorage;
+	private final static int PROCESS_TIME = 100;
+    private final static int ACTIVATION_POWER = 50;
+    private final static int MAX_RECEIVE = 1000;
+    private final static int MAX_ENERGY = ACTIVATION_POWER * PROCESS_TIME;
 	
 	/** The number of ticks that the current sticker has been cutting for */
     public int cuttingTime;
 	
+    public TileEntityAutoCutter() {
+        if (CartConfig.AUTOCUTTER_USES_RF)
+            energyStorage = new EnergyStorage(MAX_ENERGY, MAX_RECEIVE);
+    }    
+    
 	/**
      * autoCutter is cutting
      */
@@ -40,9 +54,19 @@ public class TileEntityAutoCutter extends TileEntity implements ISidedInventory 
      * cut
      */
     @SideOnly(Side.CLIENT)
-    public int getCutProgressScaled(int p_145953_1_)
+    public int getCutProgressScaled(int num)
     {
-        return this.cuttingTime * p_145953_1_ / 200;
+        return this.cuttingTime * num / PROCESS_TIME;
+    }
+    
+    /**
+     * Returns an integer between 0 and the passed value representing how much energy is stored
+     */
+    @SideOnly(Side.CLIENT)
+    public int getEnergyStorageScaled(int num)
+    {
+    	//System.out.println((int) (this.energyStorage.getEnergyStored() * (float)num / (float)this.energyStorage.getMaxEnergyStored()));
+        return (int) (this.energyStorage.getEnergyStored() * (float)num / (float)this.energyStorage.getMaxEnergyStored());
     }
 
 	@Override
@@ -75,6 +99,9 @@ public class TileEntityAutoCutter extends TileEntity implements ISidedInventory 
 		inventory = new ItemStack[getSizeInventory()];
 
 		this.cuttingTime = nbt.getShort("CutTime");
+		if (energyStorage != null)
+            energyStorage.readFromNBT(nbt);
+		
 		for (int i = 0; i < tags.tagCount(); i++) {
 			NBTTagCompound data = tags.getCompoundTagAt(i);
 			int j = data.getByte("Slot") & 255;
@@ -83,16 +110,12 @@ public class TileEntityAutoCutter extends TileEntity implements ISidedInventory 
 				inventory[j] = ItemStack.loadItemStackFromNBT(data);
 			}
 		}
-
-		if (nbt.hasKey("CustomName", 8)) {
-			this.name = nbt.getString("CustomName");
-		}
 	}
 
 	@Override
 	public void updateEntity() {
 		ItemStack base = inventory[0], template = inventory[1], output = inventory[2];
-		if (!worldObj.isRemote /*&& worldObj.getTotalWorldTime() % 40 == 0*/) {
+		if (!worldObj.isRemote) {
 			if (base != null && template != null) {
 				if (canBeMadeFrom(base, template)) {
 					// the max possible for this craft
@@ -115,17 +138,26 @@ public class TileEntityAutoCutter extends TileEntity implements ISidedInventory 
 					ItemStack Cut = ItemSticker.create(template.getTagCompound().getString("pattern"));
 					
 					// if we can place the result in the output
-					if (canMerge(Cut)/* && this.isCutting()*/) {
-						this.cuttingTime++;
-			            if (this.cuttingTime == 196)
+					if (canMerge(Cut)) {
+						
+						if (energyStorage != null) {
+		                    int energy = energyStorage.extractEnergy(ACTIVATION_POWER, true);
+		                    if (energy >= ACTIVATION_POWER) {
+		                    	this.cuttingTime++;
+		                        energyStorage.extractEnergy(ACTIVATION_POWER, false);
+		                    }
+		                } else
+		                	this.cuttingTime++;
+						
+			            if (this.cuttingTime == PROCESS_TIME-4)
 			            {
 			            	BlockAutoCutter.updateBlockState(true, this.worldObj, this.xCoord, this.yCoord, this.zCoord);
-			            	this.worldObj.playSoundEffect((double)this.xCoord + 0.5D, (double)this.yCoord + 0.5D, (double)this.zCoord + 0.5D, "mob.sheep.shear", 1.0F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F);
+			            	if(CartConfig.PLAY_SOUNDS)
+			            		this.worldObj.playSoundEffect((double)this.xCoord + 0.5D, (double)this.yCoord + 0.5D, (double)this.zCoord + 0.5D, "CartLivery:autoCutter_cut", 1.0F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F);
 			            }
-			            if (this.cuttingTime == 200)
+			            if (this.cuttingTime == PROCESS_TIME)
 			            {
 			            	BlockAutoCutter.updateBlockState(false, this.worldObj, this.xCoord, this.yCoord, this.zCoord);
-			            	//this.worldObj.playSoundEffect((double)this.xCoord + 0.5D, (double)this.yCoord + 0.5D, (double)this.zCoord + 0.5D, "mob.sheep.shear", 1.0F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F);
 			                this.cuttingTime = 0;
 			                
 			                // if our output is empty, just use the current result
@@ -184,6 +216,8 @@ public class TileEntityAutoCutter extends TileEntity implements ISidedInventory 
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		nbt.setShort("CutTime", (short)this.cuttingTime);
+		if (energyStorage != null)
+            energyStorage.writeToNBT(nbt);
 		NBTTagList tags = new NBTTagList();
 
 		for (int i = 0; i < inventory.length; i++) {
@@ -194,12 +228,7 @@ public class TileEntityAutoCutter extends TileEntity implements ISidedInventory 
 				tags.appendTag(data);
 			}
 		}
-
 		nbt.setTag("Items", tags);
-
-		if (this.hasCustomInventoryName()) {
-			nbt.setString("CustomName", this.name);
-		}
 	}
 
 	@Override
@@ -234,7 +263,7 @@ public class TileEntityAutoCutter extends TileEntity implements ISidedInventory 
 
 	@Override
 	public String getInventoryName() {
-		return name;
+		return I18n.format("tile.cartlivery:autoCutter.name");
 	}
 
 	@Override
@@ -324,4 +353,39 @@ public class TileEntityAutoCutter extends TileEntity implements ISidedInventory 
 			return false;
 		}
 	}
+	
+	public EnergyStorage getEnergyStorage() {
+        return energyStorage;
+    }
+
+	@Override
+	public boolean canConnectEnergy(ForgeDirection side) {
+        return energyStorage != null;
+    }
+
+	@Override
+	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
+        if (energyStorage == null)
+            return 0;
+        return energyStorage.receiveEnergy(maxReceive, simulate);
+    }
+
+	@Override
+	public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate) {
+        return 0;
+    }
+
+	@Override
+	public int getEnergyStored(ForgeDirection from) {
+        if (energyStorage == null)
+            return 0;
+        return energyStorage.getEnergyStored();
+    }
+
+	@Override
+	public int getMaxEnergyStored(ForgeDirection from) {
+        if (energyStorage == null)
+            return 0;
+        return energyStorage.getMaxEnergyStored();
+    }
 }

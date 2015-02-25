@@ -102,8 +102,10 @@ public class BlockAutoCutter extends BlockContainer
                 entityItem.motionX = random.nextGaussian() * factor;
                 entityItem.motionY = random.nextGaussian() * factor + 0.2F;
                 entityItem.motionZ = random.nextGaussian() * factor;
+                
+                System.out.println(entityItem.getEntityItem().getDisplayName());
+                
                 world.spawnEntityInWorld(entityItem);
-                stack.stackSize = 0;
             }
         }
     }

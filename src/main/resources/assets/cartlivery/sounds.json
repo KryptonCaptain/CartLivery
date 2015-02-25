@@ -1,0 +1,7 @@
+ {
+  "autoCutter_cut": {"category": "master","sounds": [{"name": "autoCutter_cut","stream": false}]},
+  "sticker_apply": {"category": "master","sounds": [{"name": "sticker_apply","stream": false}]},
+  "sticker_cut": {"category": "master","sounds": [{"name": "sticker_cut","stream": false}]},
+  "emblem_apply": {"category": "master","sounds": [{"name": "emblem_apply","stream": false}]},
+  "emblem_cut": {"category": "master","sounds": [{"name": "emblem_cut","stream": false}]}
+  }

@@ -45,6 +45,7 @@ color.15.name=White
 option.cartlivery.showPattern=Pattern name
 option.cartlivery.showResPack=Resource pack
 option.cartlivery.showColors=Colors
+option.cartlivery.showEmblem=Emblem
 
 message.cartlivery.overwriteModel=Overwriting default cart model
 message.cartlivery.overwriteModelMinecraftFail=Unable to overwrite Minecraft cart model, minecarts will render normally

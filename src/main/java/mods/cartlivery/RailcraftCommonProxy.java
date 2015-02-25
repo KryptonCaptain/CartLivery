@@ -54,54 +54,60 @@ public class RailcraftCommonProxy extends CommonProxy{
 	
 	@SubscribeEvent
 	public void handleMinecartEmblemRemove(EntityInteractEvent event) {
-		if (event.entityPlayer.worldObj.isRemote) return;
-
-		if (event.entityPlayer.isSneaking() && event.target.getExtendedProperties(CartLivery.EXT_PROP_NAME) != null) {
-			ItemStack stack = event.entityPlayer.getCurrentEquippedItem();
-			if (stack == null || !(stack.getItem() instanceof ItemCutter)) return;
-			
-			CartLivery livery = (CartLivery) event.target.getExtendedProperties(CartLivery.EXT_PROP_NAME);
-			if (Loader.isModLoaded("Railcraft") && livery.emblem != null && !livery.emblem.isEmpty() /*&& EmblemToolsClient.packageManager != null*/){
-				dropEmblem(event, livery);
+		if(CartConfig.ENABLE_EMBLEMS){
+			if (event.entityPlayer.worldObj.isRemote) return;
+	
+			if (event.entityPlayer.isSneaking() && event.target.getExtendedProperties(CartLivery.EXT_PROP_NAME) != null) {
+				ItemStack stack = event.entityPlayer.getCurrentEquippedItem();
+				if (stack == null || !(stack.getItem() instanceof ItemCutter)) return;
 				
-				ItemStack tool = event.entityPlayer.inventory.getStackInSlot(event.entityPlayer.inventory.currentItem);
-				tool.setItemDamage(tool.getItemDamage() + 1);
-				if (tool.getItemDamage() > tool.getMaxDamage()) {
-					event.entityPlayer.inventory.setInventorySlotContents(event.entityPlayer.inventory.currentItem, null);
+				CartLivery livery = (CartLivery) event.target.getExtendedProperties(CartLivery.EXT_PROP_NAME);
+				if (Loader.isModLoaded("Railcraft") && livery.emblem != null && !livery.emblem.isEmpty() /*&& EmblemToolsClient.packageManager != null*/){
+					dropEmblem(event, livery);
+					
+					ItemStack tool = event.entityPlayer.inventory.getStackInSlot(event.entityPlayer.inventory.currentItem);
+					tool.setItemDamage(tool.getItemDamage() + 1);
+					if (tool.getItemDamage() > tool.getMaxDamage()) {
+						event.entityPlayer.inventory.setInventorySlotContents(event.entityPlayer.inventory.currentItem, null);
+					}
+					
+					if(CartConfig.PLAY_SOUNDS)
+						event.target.playSound("CartLivery:emblem_cut", 1.0F, 1.0F);
+					CommonProxy.network.sendToAllAround(new LiveryUpdateMessage(event.target, livery), NetworkUtil.targetEntity(event.target));
+					event.setCanceled(true);
 				}
-				
-				event.target.playSound("random.break", 1.0F, 1.0F);
-				CommonProxy.network.sendToAllAround(new LiveryUpdateMessage(event.target, livery), NetworkUtil.targetEntity(event.target));
-				event.setCanceled(true);
 			}
 		}
 	}
 	
 	@SubscribeEvent
 	public void handleMinecartEmblemApply(EntityInteractEvent event) {
-		if (event.entityPlayer.worldObj.isRemote) return;
-		
-		if (event.entityPlayer.isSneaking() && event.target.getExtendedProperties(CartLivery.EXT_PROP_NAME) != null) {
-			ItemStack stack = event.entityPlayer.getCurrentEquippedItem();
-			if (stack == null || !Loader.isModLoaded("Railcraft") || !(stack.getItem() instanceof ItemEmblem) || stack.getTagCompound() == null) return;
-			if (Loader.isModLoaded("Railcraft") && stack.getItem() instanceof ItemEmblem){
-				String emblem = EmblemToolsServer.getEmblemIdentifier(stack);
-				if (emblem.isEmpty()) return;
-				
-				CartLivery livery = (CartLivery) event.target.getExtendedProperties(CartLivery.EXT_PROP_NAME);
-				if(Loader.isModLoaded("Railcraft") && !livery.emblem.equals(emblem)){
-					if (Loader.isModLoaded("Railcraft") && livery.emblem != null && !livery.emblem.isEmpty() /*&& EmblemToolsClient.packageManager != null*/){
-						dropEmblem(event, livery);
+		if(CartConfig.ENABLE_EMBLEMS){
+			if (event.entityPlayer.worldObj.isRemote) return;
+			
+			if (event.entityPlayer.isSneaking() && event.target.getExtendedProperties(CartLivery.EXT_PROP_NAME) != null) {
+				ItemStack stack = event.entityPlayer.getCurrentEquippedItem();
+				if (stack == null || !Loader.isModLoaded("Railcraft") || !(stack.getItem() instanceof ItemEmblem) || stack.getTagCompound() == null) return;
+				if (Loader.isModLoaded("Railcraft") && stack.getItem() instanceof ItemEmblem){
+					String emblem = EmblemToolsServer.getEmblemIdentifier(stack);
+					if (emblem.isEmpty()) return;
+					
+					CartLivery livery = (CartLivery) event.target.getExtendedProperties(CartLivery.EXT_PROP_NAME);
+					if(Loader.isModLoaded("Railcraft") && !livery.emblem.equals(emblem)){
+						if (Loader.isModLoaded("Railcraft") && livery.emblem != null && !livery.emblem.isEmpty() /*&& EmblemToolsClient.packageManager != null*/){
+							dropEmblem(event, livery);
+						}
+						
+						livery.emblem = emblem;
+						
+						stack.stackSize--;
+						if (stack.stackSize == 0) event.entityPlayer.setCurrentItemOrArmor(0, null);
+						
+						if(CartConfig.PLAY_SOUNDS)
+							event.target.playSound("CartLivery:emblem_apply", 1.0F, 1.0F);
+						CommonProxy.network.sendToAllAround(new LiveryUpdateMessage(event.target, livery), NetworkUtil.targetEntity(event.target));
+						event.setCanceled(true);
 					}
-					
-					livery.emblem = emblem;
-					
-					stack.stackSize--;
-					if (stack.stackSize == 0) event.entityPlayer.setCurrentItemOrArmor(0, null);
-					
-					event.target.playSound("random.anvil_land", 1.0F, 1.0F);
-					CommonProxy.network.sendToAllAround(new LiveryUpdateMessage(event.target, livery), NetworkUtil.targetEntity(event.target));
-					event.setCanceled(true);
 				}
 			}
 		}

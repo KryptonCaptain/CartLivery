@@ -1,5 +1,6 @@
 package mods.cartlivery.common;
 
+import mods.cartlivery.CartConfig;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -18,14 +19,16 @@ public class CartLivery implements IExtendedEntityProperties {
 		compound.setInteger("liveryBaseColor", baseColor);
 		compound.setInteger("liveryPatternColor", patternColor);
 		compound.setString("liveryPattern", pattern);
-		compound.setString("liveryEmblem", emblem);
+		if(CartConfig.ENABLE_EMBLEMS)
+			compound.setString("liveryEmblem", emblem);
 	}
 
 	public void loadNBTData(NBTTagCompound compound) {
 		if (compound.hasKey("liveryBaseColor")) baseColor = compound.getInteger("liveryBaseColor");
 		patternColor = compound.getInteger("liveryPatternColor");
 		pattern = compound.getString("liveryPattern");
-		emblem = compound.getString("liveryEmblem");
+		if(CartConfig.ENABLE_EMBLEMS)
+			emblem = compound.getString("liveryEmblem");
 	}
 
 	public void init(Entity entity, World world) {
