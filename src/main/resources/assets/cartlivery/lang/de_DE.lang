@@ -1,6 +1,6 @@
 item.cartlivery:cutter.name=Livree-Schneidewerkzeug
 item.cartlivery:sticker.name=Livree-Sticker
-tile.cartlivery:autoCutter.name=Livree Schneidpresse
+tile.cartlivery:autoCutter.name=Livree-Schneidpresse
 cartlivery.builtin=Eingebaut: %s
 cartlivery.respack=Paket: %s
 
