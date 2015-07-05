@@ -1,0 +1,56 @@
+item.cartlivery:cutter.name=Outil de découpage de décalcomanie
+item.cartlivery:sticker.name=Décalcomanie
+tile.cartlivery:autoCutter.name=Presse à décalcomanie
+cartlivery.builtin=Intégré: %s
+cartlivery.respack=Pack: %s
+
+cartlivery.stripe1.name=Bande basique
+cartlivery.stripe2.name=Doubles bandes
+cartlivery.arrowup.name=Flèche vers le haut
+cartlivery.dblarrow.name=Doubles Flèches
+cartlivery.corners1.name=Coins
+cartlivery.bottom.name=Fond bi-colore
+cartlivery.thissideup.name=Ce côté vers le haut
+cartlivery.love.name=Coeur
+cartlivery.db.name=Deutsche Bahn
+cartlivery.railtech.name=Rail-Tech
+cartlivery.fragile.name=Fragile
+cartlivery.electrical_hazard.name=Menace électrique
+cartlivery.fallout.name=Retombées
+cartlivery.radioactive.name=Radioactif
+cartlivery.railroad.name=Chemin de fer
+cartlivery.warning.name=Panneau d'avertissement
+cartlivery.flammable.name=Matériaux inflammables
+cartlivery.biohazard.name=Menace biologique
+cartlivery.diagonal.name=Bandes diagonales
+cartlivery.thick_diagonal.name=Bandes diagonales épaisses
+
+color.0.name=Noir
+color.1.name=Rouge
+color.2.name=Vert
+color.3.name=Marron
+color.4.name=Bleu
+color.5.name=Violet
+color.6.name=Cyan
+color.7.name=Gris clair
+color.8.name=Gris
+color.9.name=Rose
+color.10.name=Vert clair
+color.11.name=Jaune
+color.12.name=Bleu clair
+color.13.name=Magenta
+color.14.name=Orange
+color.15.name=Blanc
+
+option.cartlivery.showPattern=Nom du motif
+option.cartlivery.showResPack=Pack de ressources
+option.cartlivery.showColors=Couleurs
+option.cartlivery.showEmblem=Emblème
+
+message.cartlivery.overwriteModel=Ecrasement du modèle par défaut en cours
+message.cartlivery.overwriteModelMinecraftFail=Impossible d'écraser le modèle de wagonnet Minecraft, les wagonnets seront rendu normalement
+message.cartlivery.overwriteModelRailcraftFail=Impossible d'écraser le modèle de wagonnet Railcraft, les wagonnets seront rendu normalement
+message.cartlivery.registerBuiltIn=%d décalcomanies intégrées du mod %s en enregistrement
+message.cartlivery.invalidExclusion=Le mod %s a essayé d'enregistrer une exclusion de classe pour une classe inexistante: %s
+message.cartlivery.invalidLiveryRequest=Requête de paquet de mise à jour de décalcomanies invalide du joueur %s reçue 
+message.cartlivery.invalidLiveryUpdate=Mise à jour du paquet de décalcomanies invalide reçu
