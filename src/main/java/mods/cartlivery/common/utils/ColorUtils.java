@@ -13,14 +13,14 @@ public class ColorUtils {
 		for (int idx = 0; idx < 16; idx++) {
 			String oreName = new StringBuilder("dye").append(ItemDye.field_150923_a[idx]).toString().toLowerCase();
 			for (int oreId : OreDictionary.getOreIDs(dyeStack)) {
-				if (OreDictionary.getOreName(oreId).toLowerCase().startsWith(oreName)) return idx;
+				if (OreDictionary.getOreName(oreId).toLowerCase().startsWith(oreName)||/*Hack for light gray dye*/(OreDictionary.getOreName(oreId).toLowerCase().startsWith("dyelightgray")&&oreName.startsWith("dyesilver"))) return idx;
 			}
 		}
 		return -1;
 	}
 
 	public static String getColorName(int color) {
-		return (color < 0 || color > 15) ? "???" : I18n.format("color." + Integer.toString(color) + ".name");
+		return (color < 0 || color > 15) ? "???" : I18n.format("item.fireworksCharge." + ItemDye.field_150923_a[color]);
 	}
 	
 	public static int getColor(int color) {

@@ -21,13 +21,13 @@ public class LiveryStickerColoringRecipe implements IRecipe {
 				return false;
 			}
 		}
-        if (inv.getStackInRowAndColumn(1, 1) == null || ColorUtils.getDyeColor(inv.getStackInRowAndColumn(1, 0)) == -1){
-            return false;
+        if (inv.getStackInRowAndColumn(1, 0) == null || ColorUtils.getDyeColor(inv.getStackInRowAndColumn(1, 0)) == -1){
+        	return false;
         }
         if (inv.getStackInRowAndColumn(1, 1) == null || !(inv.getStackInRowAndColumn(1, 1).getItem() instanceof ItemSticker)){
             return false;
         }
-        if (inv.getStackInRowAndColumn(1, 1) == null || ColorUtils.getDyeColor(inv.getStackInRowAndColumn(1, 2)) == -1){
+        if (inv.getStackInRowAndColumn(1, 2) == null || ColorUtils.getDyeColor(inv.getStackInRowAndColumn(1, 2)) == -1){
             return false;
         }
 		return true;

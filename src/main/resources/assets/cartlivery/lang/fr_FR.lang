@@ -25,23 +25,6 @@ cartlivery.biohazard.name=Menace biologique
 cartlivery.diagonal.name=Bandes diagonales
 cartlivery.thick_diagonal.name=Bandes diagonales épaisses
 
-color.0.name=Noir
-color.1.name=Rouge
-color.2.name=Vert
-color.3.name=Marron
-color.4.name=Bleu
-color.5.name=Violet
-color.6.name=Cyan
-color.7.name=Gris clair
-color.8.name=Gris
-color.9.name=Rose
-color.10.name=Vert clair
-color.11.name=Jaune
-color.12.name=Bleu clair
-color.13.name=Magenta
-color.14.name=Orange
-color.15.name=Blanc
-
 option.cartlivery.showPattern=Nom du motif
 option.cartlivery.showResPack=Pack de ressources
 option.cartlivery.showColors=Couleurs

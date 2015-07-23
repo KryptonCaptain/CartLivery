@@ -25,23 +25,6 @@ cartlivery.biohazard.name=Biohazard
 cartlivery.diagonal.name=Diagonalstreifen
 cartlivery.thick_diagonal.name=Dicke Diagonalstreifen
 
-color.0.name=Schwarz
-color.1.name=Rot
-color.2.name=Grün
-color.3.name=Braun
-color.4.name=Blau
-color.5.name=Violett
-color.6.name=Türkis
-color.7.name=Hellgrau
-color.8.name=Grau
-color.9.name=Pink
-color.10.name=Hellgrün
-color.11.name=Gelb
-color.12.name=Hellblau
-color.13.name=Magentafarben
-color.14.name=Orange
-color.15.name=Weiß
-
 option.cartlivery.showPattern=Schablonenname
 option.cartlivery.showResPack=Ressourcenpaket
 option.cartlivery.showColors=Farben

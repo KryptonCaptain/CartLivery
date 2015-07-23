@@ -25,23 +25,6 @@ cartlivery.biohazard.name=Biohazard
 cartlivery.diagonal.name=Diagonal Stripes
 cartlivery.thick_diagonal.name=Thick Diagonal Stripes
 
-color.0.name=Black
-color.1.name=Red
-color.2.name=Green
-color.3.name=Brown
-color.4.name=Blue
-color.5.name=Purple
-color.6.name=Cyan
-color.7.name=Light Gray
-color.8.name=Gray
-color.9.name=Pink
-color.10.name=Lime
-color.11.name=Yellow
-color.12.name=Light Blue
-color.13.name=Magenta
-color.14.name=Orange
-color.15.name=White
-
 option.cartlivery.showPattern=Pattern name
 option.cartlivery.showResPack=Resource pack
 option.cartlivery.showColors=Colors
