@@ -30,7 +30,7 @@ public class ItemSticker extends ItemCartLivery {
 	public ItemSticker() {
 		super();
 		setUnlocalizedName("sticker");
-		setMaxStackSize(4);
+		setMaxStackSize(16);
 		setHasSubtypes(true);
 	}
 	

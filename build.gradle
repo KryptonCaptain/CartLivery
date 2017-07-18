@@ -23,7 +23,7 @@ file "build.properties" withReader {
     ext.config = new ConfigSlurper().parse prop
 }
 
-version = "0.11.1"
+version = "0.11.5"
 group= "com.github.octarine-noise" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "CartLivery-1.7.10"
 
@@ -42,11 +42,7 @@ repositories {
 }
 
 dependencies {    
-    compile("mcp.mobius.waila:Waila:${config.waila.version}:dev") {
-        exclude module: "CodeChickenLib"
-        exclude module: "CodeChickenCore"
-        exclude module: "NotEnoughItems"
-    }
+
 }
 
 processResources
